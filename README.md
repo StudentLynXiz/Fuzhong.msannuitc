@@ -2,10 +2,6 @@
 
 [![项目版本](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/your-username/your-repo)
 [![许可证](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/your-username/your-repo/blob/main/LICENSE)
-<p align="center">
-  <img src="[https://msannuitc.com/images/logo1.svg](https://youke1.picui.cn/s1/2025/07/18/6879d72438c7e.jpg)" alt="印象商社 Logo" width="150"/>
-</p>
-
 <h3 align="center">东北师大附中“印象商社”官方网站</h3>
 
 <p align="center">
@@ -96,6 +92,5 @@
 
 * **商社邮箱**: `msannu_yxss@163.com`
 * **网站技术站长**: `melisaaaaa@126.com`
-* **项目链接**: [https://github.com/your-username/your-repo]([https://github.com/your-username/your-repo](https://github.com/StudentLynXiz/Fuzhong.msannuitc/tree/main?tab=readme-ov-file#top))
-
+* 
 <p align="right">(<a href="#top">返回顶部</a>)</p>
