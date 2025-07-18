@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/logo2.svg" type="image/svg+xml">
+    <title>印象商社 - 收银台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #0a5c36;
+            --primary-light: #1a7a4f;
+            --primary-dark: #083e26;
+            --accent: #f8c300;
+            --light: #f5f9f7;
+            --text: #333333;
+            --text-light: #666666;
+            --white: #ffffff;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --success: #4CAF50;
+            --error: #f44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Noto Serif SC', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--light) 0%, #e6f2ed 100%);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(10, 92, 54, 0.05) 0%, rgba(255,255,255,0) 30%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            color: var(--white);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(248, 195, 0, 0.5);
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .logo-text span {
+            color: var(--accent);
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 20px 0;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+        }
+        
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .breadcrumb span {
+            margin: 0 8px;
+            color: var(--text-light);
+        }
+        
+        /* Checkout Layout */
+        .checkout-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+            padding-bottom: 80px;
+        }
+        
+        @media (max-width: 992px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Purchase Info */
+        .purchase-info {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .purchase-info::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(10, 92, 54, 0.1);
+            font-family: 'Noto Serif SC', serif;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title i {
+            color: var(--accent);
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background: var(--accent);
+        }
+        
+        .info-section {
+            margin-bottom: 30px;
+            background: rgba(10, 92, 54, 0.02);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 3px solid var(--accent);
+            transition: var(--transition);
+        }
+        
+        .info-section:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        
+        .info-section h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-section h3 i {
+            color: var(--accent);
+        }
+        
+        .info-content {
+            padding: 10px 5px;
+        }
+        
+        .info-content ul {
+            margin-left: 20px;
+        }
+        
+        .info-content li {
+            margin-bottom: 10px;
+            line-height: 1.7;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .info-content li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .privacy-content {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 10px;
+            background: rgba(10, 92, 54, 0.02);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            border: 1px dashed rgba(10, 92, 54, 0.1);
+        }
+        
+        .privacy-content p {
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+        
+        .privacy-content strong {
+            color: var(--primary);
+        }
+        
+        .privacy-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .privacy-content::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+        
+        /* Payment Section */
+        .payment-section {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .payment-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, var(--accent), var(--primary));
+        }
+        
+        /* QR Code Section */
+        .qr-section {
+            background: linear-gradient(135deg, rgba(10, 92, 54, 0.03) 0%, rgba(248, 195, 0, 0.03) 100%);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(10, 92, 54, 0.1);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .qr-container {
+            position: relative;
+            display: inline-block;
+            margin: 20px auto;
+        }
+        
+        .qr-code {
+            width: 240px;
+            height: 240px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            animation: pulse 2s infinite ease-in-out;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
+            50% { transform: scale(1.02); box-shadow: 0 12px 30px rgba(10, 92, 54, 0.2); }
+            100% { transform: scale(1); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
+        }
+        
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .qr-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .qr-logo img {
+            width: 30px;
+            height: 30px;
+        }
+        
+        .qr-instructions {
+            margin-top: 25px;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+        
+        .qr-instructions ol {
+            text-align: center;
+            margin: 15px 0 0 0;
+            padding: 0;
+            list-style-type: none;
+            display: inline-block;
+            text-align: left;
+        }
+        
+        .qr-instructions li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: rgba(10, 92, 54, 0.03);
+            border-radius: 30px;
+            transition: var(--transition);
+        }
+        
+        .qr-instructions li:hover {
+            background: rgba(10, 92, 54, 0.08);
+            transform: translateX(5px);
+        }
+        
+        .qr-instructions li i {
+            background: var(--primary);
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        /* Payment Buttons */
+        .payment-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .payment-btn {
+            flex: 1;
+            padding: 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .btn-cancel {
+            background: linear-gradient(to right, #f5f5f5, #e9e9e9);
+            color: var(--text-light);
+        }
+        
+        .btn-cancel:hover {
+            background: linear-gradient(to right, #e9e9e9, #dedede);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+        }
+        
+        .btn-confirm {
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(10, 92, 54, 0.3);
+        }
+        
+        .btn-confirm:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(10, 92, 54, 0.4);
+        }
+        
+        /* Payment Status */
+        .payment-status {
+            margin-top: 40px;
+            padding: 30px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.05) 0%, rgba(76, 175, 80, 0.01) 100%);
+            border: 1px solid rgba(76, 175, 80, 0.15);
+            display: none;
+            animation: fadeIn 0.8s ease;
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .payment-status::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--success);
+        }
+        
+        .payment-status.success {
+            display: block;
+        }
+        
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .status-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--success);
+        }
+        
+        .status-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .status-message {
+            line-height: 1.7;
+            color: var(--text);
+            padding: 0 10px;
+        }
+        
+        .status-message p {
+            margin-bottom: 15px;
+        }
+        
+        .order-code {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 15px 0 25px;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(10, 92, 54, 0.3);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .order-code:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(10, 92, 54, 0.4);
+        }
+        
+        .success-actions {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .success-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-print {
+            background: linear-gradient(to right, var(--accent), #f0b500);
+            color: var(--primary-dark);
+        }
+        
+        .btn-print:hover {
+            background: linear-gradient(to right, #f0b500, #e6ac00);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(248, 195, 0, 0.3);
+        }
+        
+        .btn-home {
+            background: linear-gradient(to right, var(--white), #f9f9f9);
+            color: var(--primary);
+            border: 1px solid rgba(10, 92, 54, 0.1);
+        }
+        
+        .btn-home:hover {
+            background: linear-gradient(to right, #f9f9f9, #f0f0f0);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 80px 0 30px;
+            margin-top: 100px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+        }
+        
+        .footer-column p, .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+            display: block;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-column a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        /* Decorations */
+        .decoration {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.08;
+        }
+        
+        .circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: var(--primary);
+            top: 10%;
+            right: -100px;
+        }
+        
+        .square {
+            width: 200px;
+            height: 200px;
+            background: var(--accent);
+            transform: rotate(45deg);
+            bottom: 20%;
+            left: -80px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .payment-actions {
+                flex-direction: column;
+            }
+            
+            .qr-code {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .success-actions {
+                flex-direction: column;
+            }
+            
+            .order-code {
+                font-size: 1.1rem;
+                padding: 10px 20px;
+            }
+        }
+        
+        /* Confetti Effect */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            opacity: 0;
+            z-index: 1000;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+        </div>
+    </header>
+    <!-- Checkout Container -->
+    <div class="container checkout-container">
+        <!-- Purchase Info -->
+        <div class="purchase-info">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i> 购买须知
+            </h2>
+            
+            <div class="info-section">
+                <h3><i class="fas fa-shopping-cart"></i> 购买流程</h3>
+                <div class="info-content">
+                    <ul>
+                        <li>扫描右侧二维码完成支付</li>
+                        <li>支付完成后点击"确认已支付"按钮</li>
+                        <li>保存您的订单凭证（12位订单码）</li>
+                        <li>凭订单码在工作日到指定地点领取商品</li>
+                        <li>领取时间：周一至周五 12:00-13:30</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3><i class="fas fa-gift"></i> 商品说明</h3>
+                <div class="info-content">
+                    <ul>
+                        <li>商品名称：附中印象钥匙扣</li>
+                        <li>材质：PVZ塑料</li>
+                        <li>尺寸：按照到货实品为主</li>
+                        <li>设计：附中印象商社原创设计</li>
+                        <li>生产日期：2024年6月</li>
+                        <li>限量发行：不限</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3><i class="fas fa-user-shield"></i> 用户隐私政策</h3>
+                <div class="info-content">
+                    <div class="privacy-content">
+                        <p>印象商社尊重并保护所有使用服务用户的个人隐私权。为了给您提供更准确、更有个性化的服务，印象商社会按照本隐私权政策的规定使用和披露您的个人信息。</p>
+                        <p><strong>一、我们收集哪些信息</strong></p>
+                        <p>我们收集信息是为了向您提供更好的服务。我们收集的信息包括：</p>
+                        <ul>
+                            <li>您提供的信息：当您使用我们的服务时，可能会向我们提供个人信息，例如您的姓名、联系方式、地址等。</li>
+                            <li>交易信息：当您进行交易时，我们会收集交易相关的信息，例如购买的商品、支付金额等。</li>
+                        </ul>
+                        <p><strong>二、我们如何使用收集的信息</strong></p>
+                        <p>我们利用收集的信息来提供、维护、保护和改进服务，同时开发新的服务并保护印象商社和用户。</p>
+                        <p><strong>三、信息安全</strong></p>
+                        <p>我们仅在本《隐私政策》所述目的所必需的期间和法律法规要求的时限内保留您的个人信息。我们使用各种安全技术和程序，以防信息的丢失、不当使用、未经授权阅览或披露。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment Section -->
+        <div class="payment-section">
+            <h2 class="section-title">
+                <i class="fab fa-weixin"></i> 微信支付
+            </h2>
+            
+            <div class="qr-section">
+                <h3>微信扫码支付</h3>
+                <p style="color: var(--text-light); margin-bottom: 15px;">支付金额: <strong style="color: var(--primary); font-size: 1.2rem;">¥3.00</strong></p>
+                <div class="qr-container">
+                    <div class="qr-code">
+                        <img src="https://youke1.picui.cn/s1/2025/07/17/6878da34c119c.png" alt="微信支付二维码">
+                    </div>
+                </div>
+                
+                <div class="qr-instructions">
+                    <p>请使用微信扫描二维码完成支付</p>
+                    <h3>请在扫码后备注购买物品，更方便于给您发货</h3>
+                    <ol>
+                        <li><i class="fas fa-1"></i> 打开手机微信应用</li>
+                        <li><i class="fas fa-2"></i> 点击右上角"+"号</li>
+                        <li><i class="fas fa-3"></i> 选择"扫一扫"功能</li>
+                        <li><i class="fas fa-4"></i> 扫描上方二维码完成支付</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="payment-actions">
+                <button class="payment-btn btn-cancel" id="cancelBtn">
+                    <i class="fas fa-times-circle"></i> 取消支付
+                </button>
+                <button class="payment-btn btn-confirm" id="confirmBtn">
+                    <i class="fas fa-check-circle"></i> 确认已支付
+                </button>
+            </div>
+            
+            <div class="payment-status" id="successStatus">
+                <div class="status-header">
+                    <div class="status-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="status-title">支付成功！</div>
+                </div>
+                <div class="status-message">
+                    <h4>请带着付款记录和12位订单码找商品负责人进行出货</h4>
+                    <p>感谢您购买附中印象钥匙扣！</p>
+                    <p>您的订单已成功支付，请保存以下订单码用于商品领取：</p>
+                    
+                    <div class="order-code" id="orderCode">GM1234567890-01</div>
+                    
+                    <p><i class="fas fa-map-marker-alt"></i> 领取地点：请等待主管人办理后通过微信告诉您详细地址</p>
+                    <p><i class="fas fa-clock"></i> 发货时间：购买后的三个工作日内</p>
+                    <p><i class="fas fa-phone"></i> 联系电话：17743435275</p>
+                    
+                    <div class="success-actions">
+                        <a href="#" class="success-btn btn-print" id="printBtn">
+                            <i class="fas fa-print"></i> 打印凭证
+                        </a>
+                        <a href="https://msannuitc.com/" class="success-btn btn-home">
+                            <i class="fas fa-home"></i> 返回首页
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>关于商社</h3>
+                    <p>东北师大附中印象商社是学校政治教研室创办的社团类校本课程，旨在为学生提供创新创业的思政学习实践平台。</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-weixin"></i></a>
+                        <a href="#"><i class="fab fa-weibo"></i></a>
+                        <a href="#"><i class="fab fa-qq"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <a href="https://msannuitc.com/%E6%96%87%E5%88%9B%E5%B1%95%E7%A4%BA/index.html">文创产品</a>
+                    <a href="https://msannuitc.com/">关于我们</a>
+                    <a href="#">购买指南</a>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>联系方式</h3>
+                   <p><i class="fas fa-map-marker-alt"></i> 吉林省长春市东北师范大学附属中学</p>
+                   <p><i class="fas fa-phone"></i> +86 17743435275</p>
+                   <p><i class="fas fa-envelope"></i> msannu_yxss@163.com</p>
+                   <p><i class="fas fa-envelope"></i> +86 17743435275（师大社长）</p>
+                   <p><i class="fas fa-envelope"></i> eto0010@qq.com（师大站长）</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>附中精神</h3>
+                    <p>"潮起与潮落的变幻，我们勇开风气，兼容并包；远方与诗意的感召，我们坚定向前，行稳致远！"</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 东北师大附中印象商社. 保留所有权利. | 传承附中精神 创新创造未来</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Decorations -->
+    <div class="decoration circle"></div>
+    <div class="decoration square"></div>
+
+    <script>
+        // DOM 加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生成随机订单码
+            function generateOrderCode() {
+                const prefix = "GM";
+                let randomPart = "";
+                
+                // 生成10位随机数字
+                for (let i = 0; i < 10; i++) {
+                    randomPart += Math.floor(Math.random() * 10);
+                }
+                
+                return `${prefix}${randomPart}-01`;
+            }
+            
+            // 创建五彩纸屑效果
+            function createConfetti() {
+                const colors = ['#f8c300', '#0a5c36', '#1a7a4f', '#083e26', '#4CAF50'];
+                const container = document.body;
+                
+                for (let i = 0; i < 150; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-10px';
+                    confetti.style.opacity = '1';
+                    container.appendChild(confetti);
+                    
+                    // 动画
+                    const animation = confetti.animate([
+                        { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+                        { transform: `translate(${Math.random() * 200 - 100}px, ${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                    ], {
+                        duration: 3000 + Math.random() * 3000,
+                        easing: 'cubic-bezier(0.1, 0.8, 0.2, 1)'
+                    });
+                    
+                    // 动画结束后移除元素
+                    animation.onfinish = () => confetti.remove();
+                }
+            }
+            
+            // 支付状态元素
+            const successStatus = document.getElementById('successStatus');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const confirmBtn = document.getElementById('confirmBtn');
+            
+            // 初始隐藏支付成功状态
+            successStatus.style.display = 'none';
+            
+            // 确认支付按钮事件
+            confirmBtn.addEventListener('click', function() {
+                // 生成新订单码
+                const orderCode = generateOrderCode();
+                document.getElementById('orderCode').textContent = orderCode;
+                
+                // 显示支付成功状态
+                successStatus.style.display = 'block';
+                successStatus.classList.add('success');
+                
+                // 隐藏取消支付按钮
+                cancelBtn.style.display = 'none';
+                
+                // 更改确认按钮文本和禁用
+                confirmBtn.innerHTML = '<i class="fas fa-check-circle"></i> 支付已完成';
+                confirmBtn.disabled = true;
+                confirmBtn.style.background = 'linear-gradient(to right, #4CAF50, #43A047)';
+                confirmBtn.style.cursor = 'default';
+                confirmBtn.style.boxShadow = '0 4px 10px rgba(76, 175, 80, 0.3)';
+                confirmBtn.onmouseenter = null;
+                confirmBtn.onmouseleave = null;
+                
+                // 添加打印功能
+                document.getElementById('printBtn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert(`订单凭证打印中...\n订单号: ${orderCode}`);
+                });
+                
+                // 创建庆祝效果
+                createConfetti();
+            });
+            
+            // 取消支付按钮事件
+            cancelBtn.addEventListener('click', function() {
+                if (confirm('确定要取消支付吗？\n取消后将无法完成本次购买')) {
+                    // 显示支付失败效果
+                    const originalText = cancelBtn.innerHTML;
+                    cancelBtn.innerHTML = '<i class="fas fa-times-circle"></i> 支付已取消';
+                    cancelBtn.disabled = true;
+                    cancelBtn.style.background = 'linear-gradient(to right, #f44336, #e53935)';
+                    cancelBtn.style.color = 'white';
+                    
+                    // 0.01秒后跳转
+                    setTimeout(() => {
+                        window.location.href = 'https://msannuitc.com/';
+                    }, 1);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
