@@ -26,11 +26,6 @@
 * **创新实践**：为中学生提供一个安全、真实的创新创业体验场。
 * **慈善公益**：引导学生用知识服务社会，将个人奋斗融入时代洪流。
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/your-user-id/your-image-id.gif" alt="项目动图演示">
-  <em>(这里可以替换成您网站的动态 GIF 截图)</em>
-</p>
-
 ---
 
 ## 🛠️ 技术栈 | Tech Stack
